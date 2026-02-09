@@ -40,11 +40,7 @@ const listConversations = async (
 ): Promise<ConversationSummaryDto[]> => {
   try {
     const conversations = await chatRepository.findManyByUserId(userId);
-    return conversations.map((c) => ({
-      id: c.id,
-      userId: c.userId,
-      createdAt: c.createdAt,
-    }));
+    return conversations as ConversationSummaryDto[];
   } catch {
     throw new Error("Failed to list conversations");
   }
@@ -56,19 +52,7 @@ const getConversation = async (
   try {
     const conversation = await chatRepository.findByIdWithMessages(id);
     if (!conversation) return null;
-    return {
-      id: conversation.id,
-      userId: conversation.userId,
-      createdAt: conversation.createdAt,
-      messages: conversation.messages.map((m) => ({
-        id: m.id,
-        conversationId: m.conversationId,
-        role: m.role,
-        content: m.content,
-        agentType: m.agentType,
-        createdAt: m.createdAt,
-      })),
-    };
+    return conversation as ConversationWithMessagesDto;
   } catch {
     throw new Error("Failed to get conversation");
   }
@@ -79,11 +63,7 @@ const deleteConversation = async (
 ): Promise<DeletedConversationDto> => {
   try {
     const conversation = await chatRepository.deleteById(id);
-    return {
-      id: conversation.id,
-      userId: conversation.userId,
-      createdAt: conversation.createdAt,
-    };
+    return conversation as DeletedConversationDto;
   } catch {
     throw new Error("Failed to delete conversation");
   }
