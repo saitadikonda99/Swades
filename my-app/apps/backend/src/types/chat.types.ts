@@ -2,16 +2,12 @@
  * Chat API request/response types and DTOs.
  */
 
+import { AgentType, MessageRole } from "../generated/prisma/client";
+
 /** Request body for sending a message (new or existing conversation). */
 export interface SendMessageRequest {
   conversationId?: string;
   userId: string;
-  message: string;
-}
-
-/** Response after sending a message. */
-export interface SendMessageResponse {
-  conversationId: string;
   message: string;
 }
 
@@ -24,7 +20,7 @@ export interface ListConversationsQuery {
 export interface MessageDto {
   id: string;
   conversationId: string;
-  role: string;
+  role: MessageRole;
   content: string;
   agentType: string | null;
   createdAt: Date;
@@ -50,4 +46,17 @@ export interface DeletedConversationDto {
   id: string;
   userId: string;
   createdAt: Date;
+}
+
+/** Response after sending a message. */
+export interface SendMessageResponse {
+  conversationId: string;
+  message: string;
+  agentType?: AgentType | null;
+}
+
+/** Single message in history (role + content) for AI. */
+export interface MessageHistoryItem {
+  role: MessageRole;
+  content: string;
 }

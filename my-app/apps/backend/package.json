@@ -12,9 +12,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ai-sdk/openai": "^3.0.26",
     "@hono/node-server": "^1.19.9",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
+    "ai": "^6.0.78",
     "dotenv": "^17.2.4",
     "hono": "^4.11.9",
     "pg": "^8.18.0",
