@@ -9,14 +9,17 @@
 .SidebarComponent-in {
     width: 100%;
     height: 100%;
-    padding: 2rem 1rem;
+    padding: 1rem;
     border: 1px solid #e0e0e0;
     border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .sidebar-one {
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -55,7 +58,8 @@
 
 .sidebar-two {
     width: 100%;
-    padding: 2rem 0rem 1rem 0rem;
+    padding: 1rem 0;
+    flex-shrink: 0;
 }
 
 .sidebar-two-in {
@@ -82,44 +86,89 @@
 
 .sidebar-three {
     width: 100%;
-    padding: 2rem 0rem 1rem 0rem;
+    padding: 1rem 0;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-three-in {
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-    padding: .5rem;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .sidebar-three-one {
-    width: fit-content;
-}
-
-.sidebar-three-two {
-   width: fit-content;
-}
-
-.sidebar-three-two-one {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 0.25rem;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.sidebar-three-two-one p {
-    font-size: .9rem;
-    font-weight: 400;
-    color: #7f7f7f;
+.sidebar-three-one-one {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-.sidebar-three-two-one p:first-child {
-    font-size: .9rem;
+.sidebar-three-one-one:hover {
+    background: #f0f0f0;
+}
+
+.sidebar-three-one-two {
+    flex-shrink: 0;
+}
+
+.sidebar-three-one-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    justify-content: center;
+}
+
+.sidebar-three-one-two img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-three-one-three {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.sidebar-three-one-three p {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #374151;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.sidebar-three-one-four {
+    flex: 1;
+    min-width: 0;
+}
+
+.sidebar-three-one-four p {
+    font-size: 0.875rem;
     font-weight: 400;
-    color: black;
+    color: #6b7280;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

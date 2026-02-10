@@ -77,11 +77,13 @@ const sidebar = () => {
                                         <div className="sidebar-three-one-two">
                                             <Image src="/1.png" alt="chat" width={40} height={40} />
                                         </div>
-                                        <div className="sidebar-three-one-three">
-                                            <p>{lastMsg?.role ?? 'agent'}</p>
-                                        </div>
-                                        <div className="sidebar-three-one-four">
-                                            <p>{lastMsg?.content ?? 'New chat'}</p>
+                                        <div className="sidebar-three-one-text">
+                                            <div className="sidebar-three-one-three">
+                                                <p>{lastMsg?.role ?? 'agent'}</p>
+                                            </div>
+                                            <div className="sidebar-three-one-four">
+                                                <p>{lastMsg?.content ?? 'New chat'}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 )
