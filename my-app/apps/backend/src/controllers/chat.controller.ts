@@ -26,6 +26,20 @@ const listConversations = async (c: Context) => {
   }
 };
 
+const listConversationsWithMessages = async (c: Context) => {
+  try {
+    const userId = c.req.query("userId");
+    if (!userId) {
+      return c.json({ error: "userId is required" }, 400);
+    }
+
+    const conversations = await chatService.listConversationsWithMessages(userId);
+    return c.json(conversations);
+  } catch {
+    return c.json({ error: "Failed to list conversations with messages" }, 500);
+  }
+};
+
 const getConversation = async (c: Context) => {
   try {
     const id = c.req.param("id");
@@ -60,6 +74,7 @@ const deleteConversation = async (c: Context) => {
 export const chatController = {
   sendMessage,
   listConversations,
+  listConversationsWithMessages,
   getConversation,
   deleteConversation,
 };

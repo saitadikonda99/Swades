@@ -32,6 +32,17 @@ const findManyByUserId = async (userId: string): Promise<Conversation[]> => {
   });
 };
 
+const findManyByUserIdWithMessages = async (userId: string): Promise<ConversationWithMessages[]> => {
+  return prisma.conversation.findMany({
+    where: { userId },
+    include: {
+      messages: {
+        orderBy: { createdAt: "asc" },
+      },
+    },
+  });
+};
+
 const findByIdWithMessages = async (
   id: string
 ): Promise<ConversationWithMessages | null> => {
@@ -55,6 +66,7 @@ export const chatRepository = {
   createConversation,
   createMessage,
   findManyByUserId,
+  findManyByUserIdWithMessages,
   findByIdWithMessages,
   deleteById,
 };

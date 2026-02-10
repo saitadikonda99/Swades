@@ -79,6 +79,17 @@ const listConversations = async (
   }
 };
 
+const listConversationsWithMessages = async (
+  userId: string,
+): Promise<ConversationWithMessagesDto[]> => {
+  try {
+    const conversations = await chatRepository.findManyByUserIdWithMessages(userId);
+    return conversations as ConversationWithMessagesDto[];
+  } catch {
+    throw new Error("Failed to list conversations with messages");
+  }
+};
+
 const getConversation = async (
   id: string,
 ): Promise<ConversationWithMessagesDto | null> => {
@@ -105,6 +116,7 @@ const deleteConversation = async (
 export const chatService = {
   sendMessage,
   listConversations,
+  listConversationsWithMessages,
   getConversation,
   deleteConversation,
 };

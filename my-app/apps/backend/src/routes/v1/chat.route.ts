@@ -5,6 +5,7 @@ const chatRoute = new Hono();
 
 chatRoute.post("/messages", chatController.sendMessage);
 chatRoute.get("/conversations", chatController.listConversations);
+chatRoute.get("/conversations/messages", chatController.listConversationsWithMessages);
 chatRoute.get("/conversations/:id", chatController.getConversation);
 chatRoute.delete("/conversations/:id", chatController.deleteConversation);
 

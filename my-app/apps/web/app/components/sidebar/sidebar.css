@@ -1,0 +1,110 @@
+
+
+.SidebarComponent {
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+}
+
+.SidebarComponent-in {
+    width: 100%;
+    height: 100%;
+    padding: 2rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 1rem;
+}
+
+.sidebar-one {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-one p {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.sidebar-one span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.sidebar-two {
+    width: 100%;
+    padding: 2rem 0rem 1rem 0rem;
+}
+
+.sidebar-two-in {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+    padding: .5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+.sidebar-two input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #000;
+    background: transparent;
+}
+
+.sidebar-three {
+    width: 100%;
+    padding: 2rem 0rem 1rem 0rem;
+}
+
+.sidebar-three-in {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: .5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+.sidebar-three-one {
+    width: fit-content;
+}
+
+.sidebar-three-two {
+   width: fit-content;
+}
+
+.sidebar-three-two-one {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar-three-two-one p {
+    font-size: .9rem;
+    font-weight: 400;
+    color: #7f7f7f;
+}
+
+.sidebar-three-two-one p:first-child {
+    font-size: .9rem;
+    font-weight: 400;
+    color: black;
+}

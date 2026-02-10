@@ -1,0 +1,20 @@
+
+
+.DashboardLayout {
+    width: 100%;
+}
+
+.DashboardLayout-in {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.Dashboard-one {
+    width: 30%;
+}
+
+.Dashboard-two {
+    width: 70%;
+}
