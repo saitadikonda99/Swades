@@ -28,7 +28,8 @@
     color: #000;
 }
 
-.sidebar-one span {
+.sidebar-one span,
+.sidebar-new-chat-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,6 +37,20 @@
     border-radius: 50%;
     padding: 0.5rem;
     cursor: pointer;
+}
+
+.sidebar-new-chat-btn {
+    background: transparent;
+    color: inherit;
+}
+
+.sidebar-new-chat-btn:hover:not(:disabled) {
+    background: #f5f5f5;
+}
+
+.sidebar-new-chat-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
 .sidebar-two {

@@ -1,6 +1,6 @@
 "use client"
 import React, { useCallback, useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import axios from 'axios'
 import DashboardLayout from '../../components/dashboard/layout'
 import '../page.css'
@@ -18,16 +18,18 @@ interface ConversationResponse {
 
 const ConversationPage = () => {
   const params = useParams<{ id: string }>()
+  const router = useRouter()
   const conversationId = params.id
+  const isNewChat = conversationId === 'new'
 
-  const [conversation, setConversation] = useState<ConversationResponse | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [conversation, setConversation] = useState<ConversationResponse | null>(isNewChat ? { id: 'new', messages: [] } : null)
+  const [loading, setLoading] = useState(!isNewChat)
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [streamingContent, setStreamingContent] = useState<string | null>(null)
 
   const fetchConversation = useCallback(async () => {
-    if (!conversationId) return
+    if (!conversationId || isNewChat) return
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/api/v1/chat/conversations/${conversationId}`,
@@ -38,16 +40,21 @@ const ConversationPage = () => {
     } finally {
       setLoading(false)
     }
-  }, [conversationId])
+  }, [conversationId, isNewChat])
 
   useEffect(() => {
+    if (isNewChat) {
+      setLoading(false)
+      setConversation({ id: 'new', messages: [] })
+      return
+    }
     setLoading(true)
     fetchConversation()
-  }, [fetchConversation])
+  }, [fetchConversation, isNewChat])
 
   const handleSend = async () => {
     const trimmed = input.trim()
-    if (!trimmed || !conversationId || sending) return
+    if (!trimmed || sending) return
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL
     const userId = process.env.NEXT_PUBLIC_USER_ID
@@ -68,24 +75,30 @@ const ConversationPage = () => {
               { id: crypto.randomUUID(), role: 'user', content: trimmed },
             ],
           }
-        : prev,
+        : { id: 'new', messages: [{ id: crypto.randomUUID(), role: 'user', content: trimmed }] },
     )
-    
     setInput('')
 
     try {
+      const body: { userId: string; message: string; conversationId?: string } = {
+        userId,
+        message: trimmed,
+      }
+      if (!isNewChat) body.conversationId = conversationId
+
       const res = await fetch(`${apiUrl}/api/v1/chat/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          conversationId,
-          userId,
-          message: trimmed,
-        }),
+        body: JSON.stringify(body),
       })
 
       if (!res.ok || !res.body) {
         throw new Error('Failed to send message')
+      }
+
+      const newConversationId = res.headers.get('X-Conversation-Id')
+      if (isNewChat && newConversationId) {
+        router.replace(`/chats/${newConversationId}`)
       }
 
       const reader = res.body.getReader()
@@ -104,7 +117,7 @@ const ConversationPage = () => {
     } finally {
       setSending(false)
       setStreamingContent(null)
-      await fetchConversation()
+      if (!isNewChat) await fetchConversation()
     }
   }
 
