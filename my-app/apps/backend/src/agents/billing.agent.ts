@@ -1,12 +1,20 @@
-import { streamText, tool } from "ai";
+import { streamText, tool, jsonSchema, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { paymentRepository } from "../repositories/payment.repository.js";
 
+const emptyObjectSchema = jsonSchema<Record<string, never>>({
+  type: "object",
+  properties: {},
+  additionalProperties: false,
+});
+
 export function billingAgent({
+  conversationId,
   userId,
   message,
   history,
 }: {
+  conversationId: string;
   userId: string;
   message: string;
   history: { role: "user" | "agent"; content: string }[];
@@ -30,8 +38,10 @@ Use tools to fetch payment data.
     tools: {
       getLatestPayment: tool({
         description: "Fetch user's latest payment",
+        inputSchema: emptyObjectSchema,
         execute: async () => paymentRepository.getLatestPayment(userId),
-      } as any),
+      }),
     },
+    stopWhen: stepCountIs(5),
   });
 }

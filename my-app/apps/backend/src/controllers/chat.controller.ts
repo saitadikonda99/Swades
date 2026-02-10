@@ -1,12 +1,19 @@
 import type { Context } from "hono";
 import { chatService } from "../services/chat.service.js";
-import type { SendMessageRequest, SendMessageResponse } from "../types/chat.types.js";
+import type { SendMessageRequest } from "../types/chat.types.js";
 
 const sendMessage = async (c: Context) => {
   try {
     const body = (await c.req.json()) as SendMessageRequest;
-    const response = await chatService.sendMessage(body);
-    return c.json<SendMessageResponse>(response);
+    const { response, conversationId, agentType } =
+      await chatService.sendMessage(body);
+    const res = new Response(response.body, {
+      status: response.status,
+      headers: new Headers(response.headers),
+    });
+    res.headers.set("X-Conversation-Id", conversationId);
+    res.headers.set("X-Agent-Type", agentType ?? "");
+    return res;
   } catch {
     return c.json({ error: "Failed to send message" }, 500);
   }

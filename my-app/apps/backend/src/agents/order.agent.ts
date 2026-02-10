@@ -1,12 +1,32 @@
-import { streamText, tool } from "ai";
+import { streamText, tool, jsonSchema, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { orderRepository } from "../repositories/order.repository.js";
 
+const emptyObjectSchema = jsonSchema<Record<string, never>>({
+  type: "object",
+  properties: {},
+  additionalProperties: false,
+});
+
+const trackingSchema = jsonSchema<{ tracking: string }>({
+  type: "object",
+  properties: {
+    tracking: {
+      type: "string",
+      description: "Order tracking ID",
+    },
+  },
+  required: ["tracking"],
+  additionalProperties: false,
+});
+
 export function orderAgent({
+  conversationId,
   userId,
   message,
   history,
 }: {
+  conversationId: string;
   userId: string;
   message: string;
   history: { role: "user" | "agent"; content: string }[];
@@ -30,13 +50,16 @@ Use tools when needed. Be concise and accurate.
     tools: {
       getLatestOrder: tool({
         description: "Fetch the user's latest order",
+        inputSchema: emptyObjectSchema,
         execute: async () => orderRepository.getLatestOrder(userId),
-      } as any),
+      }),
       getOrderByTracking: tool({
         description: "Fetch order by tracking id",
-        execute: async ({ tracking }: { tracking: string }) =>
+        inputSchema: trackingSchema,
+        execute: async ({ tracking }) =>
           orderRepository.getOrderByTracking(tracking),
-      } as any),
+      }),
     },
+    stopWhen: stepCountIs(5),
   });
 }

@@ -43,15 +43,17 @@ const sendMessage = async (
 
     const agentType = await routeMessageAI(input.message, history);
 
-    const stream =
+    const result =
       agentType === "order"
         ? orderAgent({
+            conversationId,
             userId: input.userId,
             message: input.message,
             history,
           })
         : agentType === "billing"
           ? billingAgent({
+              conversationId,
               userId: input.userId,
               message: input.message,
               history,
@@ -62,7 +64,30 @@ const sendMessage = async (
               history,
             });
 
-    return { stream, conversationId, agentType };
+    // Accumulate full text and persist when stream ends (per AI SDK Node.js quickstart).
+    // Use a transform so we stream to the client in real time and save to DB when done.
+    let fullText = "";
+    const encoder = new TextEncoder();
+    const stream = result.textStream.pipeThrough(
+      new TransformStream<string, Uint8Array>({
+        transform(chunk, controller) {
+          const text = typeof chunk === "string" ? chunk : new TextDecoder().decode(chunk);
+          fullText += text;
+          controller.enqueue(encoder.encode(text));
+        },
+        async flush() {
+          if (fullText.trim()) {
+            await chatRepository.createMessage(conversationId, "agent", fullText);
+          }
+        },
+      }),
+    );
+
+    const response = new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+
+    return { response, conversationId, agentType };
   } catch {
     throw new Error("Failed to send message");
   }
