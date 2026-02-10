@@ -3,11 +3,13 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
 import { Plus, Search } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import './sidebar.css'
 
 const sidebar = () => {
     const [search, setSearch] = useState('')
     const [conversations, setConversations] = useState([])
+    const router = useRouter()
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
@@ -60,7 +62,11 @@ const sidebar = () => {
                         </div>
                         <div className="sidebar-three-two">
                             {conversations.map((conversation: any) => (
-                                <div key={conversation.id} className="sidebar-three-two-one">
+                                <div
+                                    key={conversation.id}
+                                    className="sidebar-three-two-one"
+                                    onClick={() => router.push(`/chats/${conversation.id}`)}
+                                >
                                     <p>{conversation.messages[conversation.messages.length - 1].role}</p>
                                     <p>{conversation.messages[conversation.messages.length - 1].content}</p>
                                 </div>

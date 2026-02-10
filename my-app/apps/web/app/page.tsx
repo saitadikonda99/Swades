@@ -1,21 +1,19 @@
 import React from 'react'
 import DashboardLayout from './components/dashboard/layout'
-import './page.css'
 
 const page = () => {
   return (
     <DashboardLayout>
-      <div className="ChatComponent">
-        <div className="ChatComponent-in">
-          <div className="chat-messages">
-            {/* Chat messages will be rendered here */}
-          </div>
-          <div className="chat-input">
-            <input type="text" placeholder="Enter message..." />
-            <button>Send</button>
-          </div>
-        </div>
-      </div>
+      <main
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <p>Select a chat from the left to view messages.</p>
+      </main>
     </DashboardLayout>
   )
 }
