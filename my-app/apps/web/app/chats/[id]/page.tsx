@@ -70,6 +70,7 @@ const ConversationPage = () => {
           }
         : prev,
     )
+    
     setInput('')
 
     try {
@@ -82,7 +83,7 @@ const ConversationPage = () => {
           message: trimmed,
         }),
       })
-      
+
       if (!res.ok || !res.body) {
         throw new Error('Failed to send message')
       }
