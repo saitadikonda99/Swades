@@ -51,7 +51,10 @@ export interface DeletedConversationDto {
 /** Response after sending a message. */
 export interface SendMessageResponse {
   conversationId: string;
-  message: string;
+  // The LLM streaming result returned by the agent.
+  // This is intentionally typed as unknown to avoid coupling
+  // DTO types to the AI SDK's concrete return type.
+  stream: unknown;
   agentType?: AgentType | null;
 }
 

@@ -1,34 +1,12 @@
 import type { Context } from "hono";
 import { chatService } from "../services/chat.service.js";
-import type { MessageHistoryItem, SendMessageRequest, SendMessageResponse } from "../types/chat.types.js";
-import { routeMessageAI } from "../agents/router.agent.js";
+import type { SendMessageRequest, SendMessageResponse } from "../types/chat.types.js";
 
 const sendMessage = async (c: Context) => {
   try {
     const body = (await c.req.json()) as SendMessageRequest;
-    const { conversationId, userId, message } = body;
-
-    const response = await chatService.sendMessage({
-      conversationId,
-      userId,
-      message,
-    });
-
-    const conversationHistory = await chatService.getConversation(response.conversationId);
-
-    const history: MessageHistoryItem[] = (conversationHistory?.messages ?? []).map((msg) => ({
-      role: msg.role,
-      content: msg.content,
-    }));
-
-    const agentType = await routeMessageAI(message, history);
-
-    return c.json<SendMessageResponse>({
-      conversationId: response.conversationId,
-      message: response.message,
-      agentType,
-    });
-
+    const response = await chatService.sendMessage(body);
+    return c.json<SendMessageResponse>(response);
   } catch {
     return c.json({ error: "Failed to send message" }, 500);
   }

@@ -1,4 +1,9 @@
+import { routeMessageAI } from "../agents/router.agent.js";
 import { chatRepository } from "../repositories/chat.repository.js";
+import { billingAgent } from "../agents/billing.agent.js";
+import { orderAgent } from "../agents/order.agent.js";
+import { supportAgent } from "../agents/support.agent.js";
+
 import type {
   ConversationSummaryDto,
   ConversationWithMessagesDto,
@@ -8,35 +13,63 @@ import type {
 } from "../types/chat.types.js";
 
 const sendMessage = async (
-  input: SendMessageRequest
+  input: SendMessageRequest,
 ): Promise<SendMessageResponse> => {
   try {
     let conversationId = input.conversationId;
 
     if (!conversationId) {
       const newConversation = await chatRepository.createConversation(
-        input.userId
+        input.userId,
       );
       conversationId = newConversation.id;
     }
 
-    const newMessage = await chatRepository.createMessage(
+    if (!conversationId) {
+      throw new Error("Failed to resolve conversationId");
+    }
+
+    await chatRepository.createMessage(conversationId, "user", input.message);
+
+    const conversation = await chatRepository.findByIdWithMessages(
       conversationId,
-      "user",
-      input.message
     );
 
-    return {
-      conversationId,
-      message: newMessage.content,
-    };
+    const history =
+      conversation?.messages.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })) ?? [];
+
+    const agentType = await routeMessageAI(input.message, history);
+
+    const stream =
+      agentType === "order"
+        ? orderAgent({
+            userId: input.userId,
+            message: input.message,
+            history,
+          })
+        : agentType === "billing"
+          ? billingAgent({
+              userId: input.userId,
+              message: input.message,
+              history,
+            })
+          : supportAgent({
+              conversationId,
+              message: input.message,
+              history,
+            });
+
+    return { stream, conversationId, agentType };
   } catch {
     throw new Error("Failed to send message");
   }
 };
 
 const listConversations = async (
-  userId: string
+  userId: string,
 ): Promise<ConversationSummaryDto[]> => {
   try {
     const conversations = await chatRepository.findManyByUserId(userId);
@@ -47,7 +80,7 @@ const listConversations = async (
 };
 
 const getConversation = async (
-  id: string
+  id: string,
 ): Promise<ConversationWithMessagesDto | null> => {
   try {
     const conversation = await chatRepository.findByIdWithMessages(id);
@@ -59,7 +92,7 @@ const getConversation = async (
 };
 
 const deleteConversation = async (
-  id: string
+  id: string,
 ): Promise<DeletedConversationDto> => {
   try {
     const conversation = await chatRepository.deleteById(id);
