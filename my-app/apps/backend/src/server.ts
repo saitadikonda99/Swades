@@ -1,23 +1,7 @@
-import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-import { cors } from 'hono/cors'
-import dotenv from "dotenv";
-dotenv.config();
-
-
-import rootRouter from "./routes/v1";
+import { app } from "./app.js";
 
 const PORT = process.env.PORT || 3002;
-
-const app = new Hono();
-
-app.use("*", cors());
-
-app.route("/api/v1", rootRouter);
-
-app.get("/health", (c) => {
-  return c.json({ status: "ok" });
-});
 
 serve({
   fetch: app.fetch,

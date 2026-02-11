@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "dev": "nodemon --watch src --ext ts --exec tsx src/server.ts",
     "seed": "tsx prisma/seed.ts"
   },
@@ -24,8 +26,10 @@
   },
   "devDependencies": {
     "@types/node": "^25.2.2",
+    "@vitest/coverage-v8": "^2.1.8",
     "nodemon": "^3.1.11",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.8"
   }
 }

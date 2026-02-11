@@ -97,10 +97,6 @@ const ConversationPage = () => {
       }
 
       const newConversationId = res.headers.get('X-Conversation-Id')
-      if (isNewChat && newConversationId) {
-        router.replace(`/chats/${newConversationId}`)
-      }
-
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let accumulated = ''
@@ -111,6 +107,10 @@ const ConversationPage = () => {
         const chunk = decoder.decode(value, { stream: true })
         accumulated += chunk
         setStreamingContent(accumulated)
+      }
+
+      if (isNewChat && newConversationId) {
+        router.replace(`/chats/${newConversationId}`)
       }
     } catch (error) {
       console.error('Failed to send message', error)

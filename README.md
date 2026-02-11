@@ -194,6 +194,27 @@ This starts backend and web in parallel via Turborepo.
 | `npm run lint` | Lint all packages |
 | `npx prisma migrate dev` | Run migrations (from `apps/backend`) |
 | `npm run seed` | Seed database (from `apps/backend`) |
+| `npm run test` | Run backend unit + integration tests (from `apps/backend`) |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:coverage` | Run tests with coverage report |
+
+---
+
+## Testing
+
+The backend uses [Vitest](https://vitest.dev/) for unit and integration tests.
+
+```
+cd my-app/apps/backend
+npm run test
+```
+
+**Unit tests**
+- `src/agents/router.agent.test.ts` — Router agent intent classification (mocked AI)
+- `src/services/chat.service.test.ts` — Chat service (mocked repository and agents)
+
+**Integration tests**
+- `src/chat.integration.test.ts` — Chat API routes (mocked service, full HTTP layer)
 
 ---
 
